@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 
 class LanguageDataset(Dataset):
     def __init__(self, rows) -> None:
-        self.rows: List[Dict[str, str]] = [row["row"] for row in rows]
+        self.rows: List[Dict[str, str]] = [{"labels": row[0], "text": row[1]} for row in rows]
 
     def __len__(self):
         return len(self.rows)
