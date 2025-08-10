@@ -51,6 +51,18 @@ def main():
                 trigram_catalog_list.append(trigram)
                 ntrigram_index += 1
 
+    # from all trigrams take subset of 768
+    ntrigrams = len(trigram_catalog_dict)
+    trigram_subset_index = random.sample(range(0, ntrigrams), 768)
+
+    trigram_sub_catalog_dict = {}
+    trigram_sub_catalog_list = []
+    sub_idx = 0
+    for idx in trigram_subset_index:
+        trigram_sub_catalog_dict[trigram_catalog_list[idx]] = sub_idx
+        trigram_sub_catalog_list.append(trigram_catalog_list[idx])
+        sub_idx += 1
+
 
 if __name__ == "__main__":
     main()
