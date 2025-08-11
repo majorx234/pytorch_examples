@@ -9,7 +9,7 @@ def triplet_tokenizer(text, clear_spaces=False, ascii_only=False, latanize=False
     # use only ASCII characters
     text_ascii_only = text_unicode.encode("ascii", "ignore").decode() if ascii_only else text_unicode
     # remove special whitespace & newlines
-    text_without_whitespaces = re.sub(r"[\n\r\t\xa0]", " ", text_ascii_only)
+    text_without_whitespaces = re.sub(r"[\n|\r|\t|\xa0]", " ", text_ascii_only)
     # remove questionmarks
     text_without_questionmarks = re.sub(r"\?", "", text_without_whitespaces)
     # remove fullstops
