@@ -71,6 +71,7 @@ class LanguageIdentifier():
     def train_step(self, text_triplet_tensor, language_tensor):
         # set model in training mode
         self.knn.train()
+        self.optimizer.zero_grad()
         output = self.knn.forward(text_triplet_tensor)
         loss = self.criterion(output, language_tensor)
         # calculate backward propagation
