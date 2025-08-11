@@ -61,7 +61,7 @@ class LanguageIdentifier():
         trigram_catalog_list = []
         ntrigram_index = 0
         for idx in lang_ident_random_idexes:
-            trigrams = triplet_tokenizer(knn_lang_ident.train_data[idx][1], clear_spaces=True, ascii_only=True, latanize=True)
+            trigrams = triplet_tokenizer(self.train_data[idx][1], clear_spaces=True, ascii_only=True, latanize=True)
             for trigram in trigrams:
                 if trigram not in trigram_catalog_dict:
                     trigram_catalog_dict[trigram] = ntrigram_index
