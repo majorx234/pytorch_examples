@@ -68,6 +68,18 @@ class LanguageIdentifier():
         learning_rate = 0.0005
         self.optimizer = optim.SGD(self.knn.parameters(), lr=learning_rate)
 
+    def train_step(self, text_triplet_tensor, language_tensor):
+        # set model in training mode
+        self.knn.train()
+        output = self.knn.forward(text_triplet_tensor)
+        loss = self.criterion(output, language_tensor)
+        # calculate backward propagation
+        loss.backward()
+        # optimize parameters of KNN
+        self.optimizer.step()
+
+        return output, loss.item()
+
 
 def main():
     lang_filter = ["nl", "es", "it", "tr", "fr", "pl", "pt", "en", "de", "sw"]
