@@ -1,5 +1,6 @@
 import random
 
+import torch
 import torch.nn as nn
 import torch.optim as optim
 
@@ -25,9 +26,27 @@ def csv_file_to_rows(file_name, lang_filter):
         return rows
 
 
+def text2triplet_tensor(text, trigram_sub_catalog_dict):
+    trigrams = triplet_tokenizer(text, clear_spaces=True, ascii_only=True, latanize=True)
+    trigram_tensor = torch.zeros(1, len(trigram_sub_catalog_dict))
+    for trigram in trigrams:
+        if trigram in trigram_sub_catalog_dict:
+            trigram_tensor[0][trigram_sub_catalog_dict[trigram]] = 1.0
+
+
+def lang2language_tensor(lang, lang_filter_dict):
+    language_tensor = torch.zeros(1, len(lang_filter_dict))
+    if lang in lang_filter_dict:
+        idx = lang_filter_dict[lang]
+        language_tensor[0][idx] = 1.0
+
+
 class LanguageIdentifier():
     def __init__(self, train_data_csv, valid_data_csv, test_data_csv, lang_filter):
-        self.lang_filter = lang_filter
+        lang_filter_dict = {}
+        for idx, item in enumerate(lang_filter):
+            lang_filter_dict[item] = idx
+        self.lang_filter_dict = lang_filter_dict
         self.train_data = LanguageDataset(csv_file_to_rows(train_data_csv, lang_filter))
         self.valid_data = LanguageDataset(csv_file_to_rows(valid_data_csv, lang_filter))
         self.test_data = LanguageDataset(csv_file_to_rows(test_data_csv, lang_filter))
@@ -63,7 +82,7 @@ class LanguageIdentifier():
             sub_idx += 1
 
         # create KNN
-        self.knn = FeedForward01(trigram_subset_size, 50, len(self.lang_filter))
+        self.knn = FeedForward01(trigram_subset_size, 50, len(self.lang_filter_dict))
         self.criterion = nn.CrossEntropyLoss()
         learning_rate = 0.0005
         self.optimizer = optim.SGD(self.knn.parameters(), lr=learning_rate)
@@ -80,6 +99,7 @@ class LanguageIdentifier():
         self.optimizer.step()
 
         return output, loss.item()
+
 
 
 def main():
