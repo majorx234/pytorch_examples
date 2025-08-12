@@ -26,19 +26,21 @@ def csv_file_to_rows(file_name, lang_filter):
         return rows
 
 
-def text2triplet_tensor(text, trigram_sub_catalog_dict):
+def text2trigram_tensor(text, trigram_sub_catalog_dict):
     trigrams = triplet_tokenizer(text, clear_spaces=True, ascii_only=True, latanize=True)
-    trigram_tensor = torch.zeros(1, len(trigram_sub_catalog_dict))
+    trigram_tensor = torch.Tensor([0]*len(trigram_sub_catalog_dict))
     for trigram in trigrams:
         if trigram in trigram_sub_catalog_dict:
-            trigram_tensor[0][trigram_sub_catalog_dict[trigram]] = 1.0
+            trigram_tensor[trigram_sub_catalog_dict[trigram]] = 1.0
+    return trigram_tensor
 
 
 def lang2language_tensor(lang, lang_filter_dict):
-    language_tensor = torch.zeros(1, len(lang_filter_dict))
+    language_tensor = torch.Tensor([0]*len(lang_filter_dict))
     if lang in lang_filter_dict:
         idx = lang_filter_dict[lang]
-        language_tensor[0][idx] = 1.0
+        language_tensor[idx] = 1.0
+    return language_tensor
 
 
 class LanguageIdentifier():
