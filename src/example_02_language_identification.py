@@ -3,6 +3,7 @@ import random
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from tqdm.autonotebook import tqdm
 
 from .example_01_simple_feed_forward import FeedForward01
 from .tokenizer import triplet_tokenizer
@@ -101,6 +102,16 @@ class LanguageIdentifier():
         self.optimizer.step()
 
         return output, loss.item()
+
+    def train(self, epoch_size=10):
+        for epoch in tqdm(range(epoch_size), unit="epoch"):
+            samples = list(range(len(self.train_data)))
+            random.shuffle(samples)
+            for idx in tqdm(samples, unit="samples", desc="training"):
+                language, text = self.train_data
+                language_tensor = lang2language_tensor(language, self.lang_filter_dict)
+                trigram_tensor = text2trigram_tensor(text, self.trigram_sub_catalog_dict)
+                output, loss = self.train_step(trigram_tensor, language_tensor)
 
 
 
