@@ -21,7 +21,7 @@ class PerceptronSimple(nn.Module):
 
 
 class PerceptronSimpleTrainer:
-    def __init__(self, train_data, test_data, learn_rate):
+    def __init__(self, train_data, test_data, learn_rate=0.01):
         self.train_dataset = MnistDataset(train_data)
         self.test_dataset = MnistDataset(test_data)
         self.classifier = PerceptronSimple(lr=learn_rate)
